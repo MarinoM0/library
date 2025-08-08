@@ -1,0 +1,31 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.library {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.book-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #f9f9f9;
+}
+
+.book-card h3 {
+  margin: 0;
+}
+
+.book-card p {
+  margin: 4px 0;
+}
+
+button {
+  margin-top: 6px;
+  display: inline-block;
+}
