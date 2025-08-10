@@ -1,23 +1,49 @@
-const myLibrary = [];
+class Book {
+    constructor(title,author,pages,read) {
+        this.id = crypto.randomUUID();
+        this.title=title;
+        this.author=author;
+        this.pages=pages;
+        this.read=read;
+}}
 
-function Book(title,author,pages,read) {
-    this.id = crypto.randomUUID();
-    this.title=title;
-    this.author=author;
-    this.pages=pages;
-    this.read=read;
+
+class Library {
+
+constructor() {
+    this.books = [];
 }
 
-function addBookToLibrary(title,author,pages,read) {
+addBookToLibrary(title,author,pages,read) {
     let book= new Book(title,author,pages,read);
-    myLibrary.push(book);
+    this.books.push(book);
 }
 
-function displayBooks() {
+removeBook(e) {
+    const bookId = e.target.parentElement.getAttribute("data-id");
+    const index= this.books.findIndex(book => bookId === book.id);
+
+    if(index !== -1) {
+        this.books.splice(index,1);
+        this.displayBooks();
+    }
+}
+
+toggleBookRead(e) {
+    const bookId = e.target.parentElement.getAttribute("data-id");
+    const book = this.books.find(book => bookId === book.id);
+
+    if(book){
+        book.read = !book.read;
+    }
+    this.displayBooks();
+}
+
+displayBooks() {
     const libraryDisplay=document.getElementById("libraryDisplay");
     libraryDisplay.innerHTML = "";
 
-    myLibrary.forEach(book => {
+    this.books.forEach(book => {
         const card = document.createElement("div");
         card.classList.add("book-card");
         card.setAttribute("data-id", book.id);
@@ -32,39 +58,21 @@ function displayBooks() {
         `;
 
         libraryDisplay.appendChild(card);
+        })
 
         document.querySelectorAll(".remove-book").forEach(btn => {
-            btn.addEventListener("click",removeBook);
+            btn.addEventListener("click",e => this.removeBook(e));
         })
 
         document.querySelectorAll(".toggle-read").forEach(btn => {
-            btn.addEventListener("click",toggleBookRead)
+            btn.addEventListener("click",e => this.toggleBookRead(e))
         })
-    });
-}
-
-function removeBook(e) {
-    const bookId = e.target.parentElement.getAttribute("data-id");
-    const index= myLibrary.findIndex(book => bookId === book.id);
-
-    if(index !== -1) {
-        myLibrary.splice(index,1);
-        displayBooks();
     }
-}
-
-function toggleBookRead(e) {
-    const bookId = e.target.parentElement.getAttribute("data-id");
-    const book = myLibrary.find(book => bookId === book.id);
-
-    if(book){
-        book.read = !book.read;
-    }
-    displayBooks();
 }
 
 
 // dialog handling
+let myLibrary = new Library();
 
 const newBookBtn = document.getElementById("newBookBtn");
 const bookDialog = document.getElementById("bookDialog");
@@ -82,25 +90,14 @@ bookForm.addEventListener("submit", (e) => {
     const pages = parseInt(document.getElementById("pages").value);
     const read = document.getElementById("read").ariaChecked;
 
-    addBookToLibrary(title,author,pages,read);
-    displayBooks();
+    myLibrary.addBookToLibrary(title,author,pages,read);
+    myLibrary.displayBooks();
 
     bookForm.reset();
     bookDialog.close();
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-addBookToLibrary("book1","ante a",100,true);
-addBookToLibrary("book2", "marino m",150,true)
-displayBooks();
+myLibrary.addBookToLibrary("book1","ante a",100,true);
+myLibrary.addBookToLibrary("book2", "marino m",150,true)
+myLibrary.displayBooks();
